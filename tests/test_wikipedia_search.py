@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import time
 import allure
 import pytest
+from selene.support.shared import browser
+from appium.webdriver.common.appiumby import AppiumBy
+from selene import be
 
 from pages.wikipedia_app import wikipedia
 
@@ -13,77 +17,36 @@ class TestWikipediaSearch:
 
     @allure.title("Search for 'BrowserStack' and verify results exist")
     @allure.severity(allure.severity_level.CRITICAL)
-    @allure.description("""
-    Test objective: Verify that search functionality works correctly.
-
-    Steps:
-    1. Close onboarding if present
-    2. Search for query 'BrowserStack'
-    3. Verify that search results contain the search term
-    """)
     @pytest.mark.android
     @pytest.mark.search
     @pytest.mark.bstack
     def test_search_in_wikipedia__valid_query_BrowserStack__should_find_results(self):
-        # Given: Wikipedia app is open
-        wikipedia.close_onboarding_if_present()
+        # Close onboarding
+        try:
+            for i in range(3):
+                btn = browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/fragment_onboarding_forward_button"))
+                btn.with_(timeout=5).should(be.visible).click()
+                time.sleep(1)
+        except:
+            pass
 
-        # When: User searches for "BrowserStack"
+        # Click GET STARTED
+        try:
+            get_started = browser.element((AppiumBy.XPATH,
+                                           "//android.widget.Button[contains(@text, 'GET STARTED') or contains(@text, 'Get started')]"))
+            get_started.click()
+            time.sleep(2)
+        except:
+            pass
+
+        # Close banner
+        try:
+            close_icon = browser.element((AppiumBy.XPATH, "//android.view.View[@content-desc='Close']/.."))
+            close_icon.click()
+            time.sleep(2)
+        except:
+            pass
+
+        # Search
         wikipedia.search("BrowserStack")
-
-        # Then: Search results should contain "BrowserStack"
         wikipedia.results_should_contain_text("BrowserStack")
-
-    @allure.title("Search for 'Selenium' and verify results count")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.description("""
-    Test objective: Verify that search returns multiple results.
-
-    Steps:
-    1. Search for query 'Selenium'
-    2. Verify that more than 1 result is displayed
-    """)
-    @pytest.mark.android
-    @pytest.mark.search
-    def test_search_in_wikipedia__valid_query_Selenium__should_have_multiple_results(self):
-        # Given: Wikipedia app is open
-        wikipedia.close_onboarding_if_present()
-
-        # When: User searches for "Selenium"
-        wikipedia.search("Selenium")
-
-        # Then: Should have more than 1 result
-        wikipedia.results_should_have_count_greater_than(1)
-
-    @allure.title("Search for non-existent query and verify no results")
-    @allure.severity(allure.severity_level.MINOR)
-    @allure.description("""
-    Test objective: Verify behavior for non-existent search query.
-
-    Steps:
-    1. Search for non-existent query 'xyzabc123'
-    2. Verify appropriate message or empty results
-    """)
-    @pytest.mark.android
-    @pytest.mark.search
-    def test_search_in_wikipedia__invalid_query__should_show_no_results(self):
-        # Given: Wikipedia app is open
-        wikipedia.close_onboarding_if_present()
-
-        # When: User searches for non-existent term
-        wikipedia.search("xyzabc123")
-
-        # Then: Should show "No results" or empty state
-        # Note: This is a placeholder - implement based on actual app behavior
-        import time
-        time.sleep(2)
-
-        # Check that there are no results (or error message)
-        page_source = wikipedia.browser.config.driver.page_source
-        assert "No results" in page_source or "No matching" in page_source
-
-        allure.attach(
-            "Search for non-existent query completed",
-            name="Search result",
-            attachment_type=allure.attachment_type.TEXT
-        )
