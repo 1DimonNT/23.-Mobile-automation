@@ -1,0 +1,15 @@
+# Core frameworks
+Appium-Python-Client==4.0.0
+pytest==8.2.1
+selene==2.0.0rc9
+
+# Configuration and environment
+pydantic==2.4.2
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# Reporting
+allure-pytest==2.13.5
+
+# HTTP requests (for BrowserStack API)
+requests==2.31.0

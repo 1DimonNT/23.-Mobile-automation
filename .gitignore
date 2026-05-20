@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Testing
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+.allure/
+allure-results/
+allure-report/
+
+# Secrets - НИКОГДА НЕ КОММИТИТЬ!
+.env
+.env.credentials
+.env.local
+.env.production
+.env.*.local
+*.key
+*.pem
+
+# Logs
+*.log
+logs/
+
+# Screenshots and dumps
+*.png
+*.xml
+article_page.xml
+screenshots/
+page_dumps/
+
+# Mobile specific
+*.apk
+*.ipa
+*.app
+*.aab
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Project specific
+WikipediaApp
+*.tmp
+temp/
